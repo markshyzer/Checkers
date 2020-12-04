@@ -1,8 +1,10 @@
 :root {
-    --black: black;
-    --white: white;
+    --black: #333333;
+    --white: #DDDDDD;
     --boardsize: 600px;
     --squaresize: 75px;
+    --player1color: white;
+    --player-1color: black;
 }
 
 body {
@@ -16,6 +18,7 @@ body {
 }
 
 #menubox {
+    display:none;
     width: 385px;
     height: 495px;
     background-color: lightgray;
@@ -36,7 +39,12 @@ body {
     font-size: 20px;
     color: white;
     text-align: center;
+    user-select: none;
 
+}
+
+#helpicon:hover {
+    background-color: #666666;
 }
 
 #playarea {
@@ -113,3 +121,12 @@ body {
     right: 220px;
     top: -160px;
 }
+
+.piece {
+    width: 65px;
+    height: 65px;
+    background-color: white;
+    margin: 5px;
+    border-radius: 50%;
+}
+
