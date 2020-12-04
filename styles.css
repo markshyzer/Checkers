@@ -1,8 +1,8 @@
 :root {
     --black: black;
     --white: white;
-    --boardsize: 400px;
-    --squaresize: 50px;
+    --boardsize: 600px;
+    --squaresize: 75px;
 }
 
 body {
@@ -11,13 +11,13 @@ body {
 }
 
 #menu {
+    position: absolute;
     min-width: 300px;
 }
 
-
 #menubox {
-    width: 280px;
-    height: 290px;
+    width: 385px;
+    height: 495px;
     background-color: lightgray;
     position: relative;
     top: -20px;
@@ -37,6 +37,11 @@ body {
     color: white;
     text-align: center;
 
+}
+
+#playarea {
+
+    margin: 0 auto;
 }
 
 #board {
@@ -94,16 +99,17 @@ body {
     height: 75px;
     background-color: darkgray;
     position: relative;
-    left: 10px;
+    left: 610px;
+    top: -600px;
 
 }
 
 #P2status {
-    /* margin: 10px; */
+    margin: 10px;
     width: 200px;
     height: 75px;
     background-color: darkgray;
     position: relative;
-    right: 810px;
-    top: 325px;
+    right: 220px;
+    top: -160px;
 }
