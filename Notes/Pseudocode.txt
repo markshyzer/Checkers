@@ -1,0 +1,62 @@
+1.  Required constants
+	-players 1 & -1
+	-Maximum turns for a draw
+
+2. Required variables to track the state of the game
+	-8x8 2D nested arrays
+	-Tally of each player's captured pieces
+	-Turn toggle
+	-Jump available
+	-Selected piece
+	-Turn counter
+
+3. Cache DOM elements
+	-Game board, forfeit button
+
+4. On load
+	Initialize & then render:
+	-Board with 12 of each player's pieces occupying the first three rows, black squares only. Use 1 and -1 to represent player 1 and -1's pieces, 0 for empty
+	-Set each player's score to 0
+	-Set toggle to 1, jump available to false, selected piece to null
+
+5. On each turn
+	-Check whether a jump is available
+
+	When Player clicks a square
+	-If it's one of Player's pieces, highlight the square, if not, do nothing.
+
+	With a piece selected
+	-Highlight legal destination squares when they are hovered over. 
+	-Display a message if an illegal move is attempted, including if a jump is not taken
+	-When a legal destination is selected, update the array to reflect the move
+	Legal moves: 
+	-Regular move: [x + 1 (or -1 if kinged), y (+1 or -1)] = 0
+	-Jump [x + 1 (or -1 if kinged), y (+1 or -1)] = Opponent's piece and corresponding [x + 2 (or -2 if kinged), y (+2 or -2)] = 0
+	-Jumps can chain
+	
+	If the move is a jump
+	-Move the piece
+	-Remove the opponent's piece and add one to their captured piece count
+	-Set draw counter to 0
+	-Check whether another jump is possible; if so, continue the turn
+
+	If the move take the piece to the end of the board
+	-King it, if it isn't already
+
+	Check for a winner. Three ways to win:
+	-Captured pieces count = 12
+	-Other player has no legal moves
+	-Too many turns have elapsed without capture; call a draw and determine winner by most pieces captured (kings as tiebreakers)
+
+	If there's a winner, display it, with a replay button, otherwise reset jump available, selected piece; add one to draw counter, multiple toggle by -1 to switch turn
+
+When a player clicks forfeit: the other player wins immediately
+When a player clicks restart: reinitiatlize the game
+
+	
+
+
+
+
+	-
+
