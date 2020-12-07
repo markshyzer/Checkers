@@ -1,10 +1,14 @@
 :root {
-    --black: #333333;
+    --black: #666666;
     --white: #DDDDDD;
     --boardsize: 600px;
     --squaresize: 75px;
     --player1color: white;
     --player-1color: black;
+}
+
+* {
+   box-sizing: border-box; 
 }
 
 body {
@@ -30,6 +34,7 @@ body {
 
 #helpicon {
     background-color: darkgray;
+    box-sizing: content-box;
     width: 30px;
     height: 30px;
     border: thick white solid;
@@ -59,6 +64,7 @@ body {
     background-color: beige;
     width: var(--boardsize);
     min-width: var(--boardsize);
+
 
 }
 
@@ -123,10 +129,31 @@ body {
 }
 
 .piece {
-    width: 65px;
-    height: 65px;
+    width: 80%;
+    height: 80%;
     background-color: white;
-    margin: 5px;
+    position: relative;
+    top: 10%;
+    left: 10%;
     border-radius: 50%;
+    box-shadow: 2px 2px 2px rgba(5, 5, 5, 0.5);
 }
 
+.selected {
+    /* border: thin solid pink; */
+}
+
+.selected .piece {
+    box-shadow: 10px 10px 5px rgba(5, 5, 5, 0.5);
+    top: -5%;
+}
+
+.legal {
+    border: thick solid green;
+    background-color: green;
+}
+
+.legal:hover {
+    border: thick solid green;
+    background-color: green;
+}
