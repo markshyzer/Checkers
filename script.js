@@ -13,7 +13,7 @@ let pieceSelected = {x:0, y:0, value:0}
 let coordString 
 // let legalMoves = []
 let playerTurn = -1
-let legalLocal = [['','','','',''],['','','','','',],['','','','','',],['','','','','',],['','','','','',]]
+let legalLocal = [['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','','']]
 let squareID;
 
 
@@ -37,7 +37,7 @@ board.addEventListener('click', function(square) {
 
     if (square.target.classList.contains('piece')) {
         console.log("Circle on square ", squareID)
-        if (pieceSelected.value === 0 || (pieceSelected.x*10 + pieceSelected.y) == squareID) {
+        if (pieceSelected.value === 0 && (playerTurn*gameState[Math.floor(squareID/10)][squareID%10]) >0 ) {
             setPieceSelected(square)
         }
         // setPieceSelected(square.target.parentElement.id)
@@ -117,7 +117,7 @@ function dropPiece(destinationSquare) {
 
         console.log("piece dropped at ", destinationSquare)
         clearSelected()
-        // clearLegal()
+        clearLegal()
         render()
 
     // }
@@ -138,21 +138,21 @@ function checkLegal (squareX, squareY) {
             if (gameState[squareX+playerTurn][squareY+1] === 0) {
                 // console.log(squareX, playerTurn, squareY)
                 // console.log(gameState[squareX+playerTurn][squareY+1])
-                legalLocal[playerTurn+2][3] = 'legal'
+                legalLocal[squareX+playerTurn][squareY+1] = 'legal'
                 // console.log("legal right move at relative ", playerTurn, +1, "absolute ", (squareX+playerTurn), (squareY+1))
             }
             if (gameState[squareX+playerTurn][squareY+1] === playerTurn*-1 && gameState[squareX+(playerTurn*2)][squareY+2] === 0) {
-                legalLocal[(playerTurn*2)+2][4] = 'jump'
+                legalLocal[squareX+(playerTurn*2)][squareY+2] = 'jump'
                 // [squareX+(playerTurn*2)][squareY+2]
             }
         }
         if (squareY-1 >= 0) { // left Y boundary
             if (gameState[squareX+playerTurn][squareY-1] === 0) {
-                legalLocal[playerTurn+2][1] = 'legal'
+                legalLocal[squareX+playerTurn][squareY-1] = 'legal'
                 // console.log("legal left move at relative ", playerTurn, -1)
             }
             if (gameState[squareX+playerTurn][squareY-1] === playerTurn*-1 && gameState[squareX+(playerTurn*2)][squareY-2] === 0) {
-                legalLocal[(playerTurn*2)+2][-0] = 'jump'
+                legalLocal[squareX+(playerTurn*2)][squareY-2] = 'jump'
             }
         }
     }
@@ -162,7 +162,7 @@ function checkLegal (squareX, squareY) {
 }
 
 function clearLegal () {
-    legalLocal = [['','','','','',],['','','','','',],['','','','','',],['','','','','',],['','','','','',]]
+    legalLocal = [['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','','']]
     renderLegal()
 }
 
@@ -172,9 +172,9 @@ function renderLegal (squareX, squareY) {
     legalLocal.forEach(function(x, xi) {
         x.forEach(function (y, yi) {
             if (y !== '') {
-                document.getElementById((squareX-2+xi).toString() + (squareY-2+yi).toString()).classList.add('legal')
+                document.getElementById(xi.toString() + yi.toString()).classList.add('legal')
             } else {
-                document.getElementById((squareX-2+xi).toString() + (squareY-2+yi).toString()).classList.remove('legal')
+                document.getElementById(xi.toString() + yi.toString()).classList.remove('legal')
             }
         })
     })
