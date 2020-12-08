@@ -137,6 +137,10 @@ body {
     left: 10%;
     border-radius: 50%;
     box-shadow: 2px 2px 2px rgba(5, 5, 5, 0.5);
+    color: silver;
+    font-size: 200%;
+    line-height: 65px;
+    text-align: center;
 }
 
 .selected {
@@ -149,11 +153,26 @@ body {
 }
 
 .legal {
-    border: thick solid green;
-    background-color: green;
+    box-shadow: inset 0px 0px 10px 10px #444444;
+    /* border: thin solid var(--black) */
+    /* border: thick solid green; */
+    /* background-color: green; */
 }
 
-.legal:hover {
+/* .legal:hover {
     border: thick solid green;
     background-color: green;
+} */
+
+img {
+    width: 90%;
+    position: relative;
+    top: 5%;
+    left: 5%;
+}
+
+.king {
+    background-image: url("img/checkers_crown.png");
+    background-size: contain;
+    border: thick solid green;
 }
