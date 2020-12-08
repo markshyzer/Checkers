@@ -178,6 +178,29 @@ function checkLegal (squareX, squareY) {
             }
         }
     }
+    if (pieceSelected.value === 2 || pieceSelected.value === -2) {
+        console.log("You've chosen a king")
+        if (squareX-playerTurn < 8 && squareX-playerTurn >= 0) { // X boundary
+            if (squareY+1 < 8) {// right Y boundary
+
+                if (gameState[squareX-playerTurn][squareY+1] === 0) {
+                    legalLocal[squareX-playerTurn][squareY+1] = 'legal'
+                }
+                if ((squareX-(playerTurn) >=0 && squareX-(playerTurn) <8 ) && gameState[squareX-playerTurn][squareY+1] === playerTurn*-1 && gameState[squareX-(playerTurn*2)][squareY+2] === 0) {
+                    legalLocal[squareX+(playerTurn*2)][squareY+2] = 'jump'
+                }
+            } //
+            if (squareY-1 >= 0) { // left Y boundary
+                if (gameState[squareX-playerTurn][squareY-1] === 0) {
+                    legalLocal[squareX-playerTurn][squareY-1] = 'legal'
+                }
+                
+                if ((squareX-(playerTurn) >=0 && squareX-(playerTurn) <8 ) && gameState[squareX-playerTurn][squareY-1] === playerTurn*-1 && gameState[squareX-(playerTurn*2)][squareY-2] === 0) {
+                    legalLocal[squareX-(playerTurn*2)][squareY-2] = 'jump'
+                }
+            }
+        }
+    }
     // if the value of the square at x:player and y:+/-1 = 0, it's legal
     // if value > 1 or <-1, then if the value of the square at x(player*-1) and y:+-1 is 0, it's legal
     // if the value of the square at xplayer and y:+/-1 = player*-1, if the value of the square at x:player*2 y:(+or-)1 is 0, it's legal (and a jump!) 
