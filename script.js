@@ -9,14 +9,23 @@ let menubox = document.getElementById('menubox')
 
 // Application variables
 let gameState = [
-    [0,1,0,1,0,1,0,1],
-    [1,0,1,0,1,0,1,0],
-    [0,1,0,1,0,1,0,1],
     [0,0,0,0,0,0,0,0],
+    [-1,0,1,0,0,0,0,0],
+    [0,0,0,0,0,1,0,0],
     [0,0,0,0,0,0,0,0],
+    [0,1,0,1,0,1,0,1],
     [-1,0,-1,0,-1,0,-1,0],
     [0,-1,0,-1,0,-1,0,-1],
     [-1,0,-1,0,-1,0,-1,0]]
+
+    // [0,1,0,1,0,1,0,1],
+    // [1,0,1,0,1,0,1,0],
+    // [0,1,0,1,0,1,0,1],
+    // [0,0,0,0,0,0,0,0],
+    // [0,0,0,0,0,0,0,0],
+    // [-1,0,-1,0,-1,0,-1,0],
+    // [0,-1,0,-1,0,-1,0,-1],
+    // [-1,0,-1,0,-1,0,-1,0]]
 let pieceSelected = {x:0, y:0, value:0}
 let coordString 
 let gameStateX
@@ -35,6 +44,7 @@ let legalLocal = [
 let squareID;
 let player1 = {score: 0, capturedEnemies: 0}
 let player0 = {score: 0, capturedEnemies: 0}
+let secondJump = false
 
 helpIcon.addEventListener('click', function() {
     if (menubox.style.display === "") {
@@ -64,6 +74,7 @@ board.addEventListener('click', function(square) {
     if (square.target.classList.contains('piece')) {
         console.log("Circle on square ", squareID)
         if ((pieceSelected.value === 0 && (playerTurn*gameState[Math.floor(squareID/10)][squareID%10]) >0 ) || pieceSelected.x*10 + pieceSelected.y == squareID ) {
+            console.log("setPieceSelected(square)", square)
             setPieceSelected(square)
         }
         // setPieceSelected(square.target.parentElement.id)
@@ -80,11 +91,29 @@ board.addEventListener('click', function(square) {
         console.log("Piece selected value after dropping: ", pieceSelected.value)
         } else if (legalLocal[gameStateX][gameStateY] === 'jump') {
             console.log("Jump!")
-            console.log("Delta: ", delta(squareID, (pieceSelected.x*10) + pieceSelected.y))
-
-            console.log("SquareID: ", squareID, typeof(parseInt(squareID)))
+            // console.log("Delta: ", delta(squareID, (pieceSelected.x*10) + pieceSelected.y))
+            // console.log("SquareID: ", squareID, typeof(parseInt(squareID)))
+            console.log("Legal moves before jump: ", legalLocal)
+            console.log("Jumping to:", gameStateX, gameStateY)
             capture( (pieceSelected.x*10) + pieceSelected.y,  parseInt(squareID))
+            playerTurn *= -1
             dropPiece(squareID)
+            checkLegal(gameStateX, gameStateY)
+            if (legalLocal.some(x => x.includes('jump'))) {
+                console.log("Another jump is available!")
+                secondJump = true
+                renderLegal()
+                console.log("Square: ", square)
+                setPieceSelected(square)
+                secondJump = false
+                console.log("Player turn: ", playerTurn)
+                console.log(pieceSelected)
+                playerTurn*= -1
+            }
+            playerTurn *= -1
+            console.log("Game state after jump: ", gameState)
+            console.log("Legal moves after jump: ", legalLocal)
+            // setPieceSelected(square)
         } else {
             console.log("Illegal move!")
         }
@@ -116,11 +145,19 @@ function render() {
 
 function setPieceSelected(square) {
     console.log("Set Square: ", square.target.parentElement.id)
+    // drop the piece if the square selected = the piece seleected
     if (pieceSelected.x === Math.floor(square.target.parentElement.id/10) && pieceSelected.y === square.target.parentElement.id%10) {
         playerTurn *= -1
         dropPiece(square.target.parentElement.id)
+    } else if (secondJump === true) {
+        console.log("Set Square: ", square.target.id)
+        pieceSelected.x = parseInt(square.target.id[0])
+        pieceSelected.y = parseInt(square.target.id[1])
+        pieceSelected.value = playerTurn
+        console.log ("pieceSelected: ", pieceSelected)
+        square.target.classList.add('selected')
     } else {
-        console.log("Set Square: ", square.target.parentElement.id[0])
+        console.log("Set Square: ", square.target.parentElement.id)
         pieceSelected.x = parseInt(square.target.parentElement.id[0])
         pieceSelected.y = parseInt(square.target.parentElement.id[1])
         pieceSelected.value = gameState[pieceSelected.x][pieceSelected.y]
@@ -176,13 +213,15 @@ function delta(start, end) {
 }
 
 function checkLegal (squareX, squareY) {
-    // clearLegal()
+    clearLegal()
     // console.log("square X: ", squareX, "square Y: ", squareY)
-    console.log("Player turn", playerTurn, "Playerturn *-2", playerTurn*-2)
+    // console.log("Player turn", playerTurn, "Playerturn *-2", playerTurn*-2)
     // Forward moves
+    console.log("Game state at begining of checkLegal: ", gameState)
+    console.log("Turn at begining of checkLegal: ", playerTurn)
     if (squareX+playerTurn < 8 && squareX+playerTurn >= 0) { // X boundary
         if (squareY+1 < 8) {// right Y boundary
-            console.log(squareX, playerTurn, squareY)
+            // console.log(squareX, playerTurn, squareY)
             if (gameState[squareX+playerTurn][squareY+1] === 0) {
                 legalLocal[squareX+playerTurn][squareY+1] = 'legal'
             }
@@ -207,7 +246,7 @@ function checkLegal (squareX, squareY) {
     // Reverse Moves
     if (pieceSelected.value === 2 || pieceSelected.value === -2) {
         console.log("You've chosen a king")
-        console.log(legalLocal)
+        // console.log(legalLocal)
         if (squareX-playerTurn < 8 && squareX-playerTurn >= 0) { // X boundary
             if (squareY+1 < 8) {// right Y boundary
 
@@ -217,7 +256,7 @@ function checkLegal (squareX, squareY) {
                 if (squareX+(playerTurn*-2) >=0 && squareX+(playerTurn*-2) <8 ) {
                 if (((gameState[squareX-playerTurn][squareY+1] === playerTurn*-1) || (gameState[squareX-playerTurn][squareY+1] === playerTurn*-2)) && (gameState[squareX-(playerTurn*2)][squareY+2] === 0)) {
                     legalLocal[squareX-(playerTurn*2)][squareY+2] = 'jump'
-                    console.log("Legal jump available to the right at ", squareX-(playerTurn*2), ",", squareY+2)
+                    // console.log("Legal jump available to the right at ", squareX-(playerTurn*2), ",", squareY+2)
 
                 }
             }
@@ -230,7 +269,7 @@ function checkLegal (squareX, squareY) {
                 if (squareX+(playerTurn*-2) >=0 && squareX+(playerTurn*-2) <8 ) {
                 if (((gameState[squareX-playerTurn][squareY-1] === playerTurn*-1) || (gameState[squareX-playerTurn][squareY-1] === playerTurn*-2)) && (gameState[squareX-(playerTurn*2)][squareY-2] === 0)) {
                     legalLocal[squareX-(playerTurn*2)][squareY-2] = 'jump'
-                    console.log("Legal jump available to the left at ", squareX-(playerTurn*2), ",", squareY-2)
+                    // console.log("Legal jump available to the left at ", squareX-(playerTurn*2), ",", squareY-2)
                 }
             }
         }
@@ -247,7 +286,7 @@ function clearLegal () {
 }
 
 
-function renderLegal (squareX, squareY) {
+function renderLegal () {
     // console.log(legalLocal)
     legalLocal.forEach(function(x, xi) {
         x.forEach(function (y, yi) {
