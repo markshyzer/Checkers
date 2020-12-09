@@ -10,12 +10,12 @@ let menubox = document.getElementById('menubox')
 // Application variables
 let gameState = [
     [0,1,0,1,0,1,0,1],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
     [1,0,1,0,1,0,1,0],
+    [0,1,0,1,0,1,0,1],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [-1,0,-1,0,-1,0,-1,0],
     [0,-1,0,-1,0,-1,0,-1],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
     [-1,0,-1,0,-1,0,-1,0]]
 let pieceSelected = {x:0, y:0, value:0}
 let coordString 
@@ -264,6 +264,7 @@ function capture (startSquare, endSquare) {
     console.log ("Start and end: ", startSquare, endSquare, "Types: ", typeof(startSquare), typeof(endSquare))
     let direction = delta(startSquare, endSquare)
     console.log("Direction of move: ", direction)
-    // gameState[(Math.floor[endSquare/10])+direction[0]/2][(endSquare%10)+direction/2] = 0
-
+    console.log("Delete piece at ", Math.floor(endSquare/10) - direction[0]/2, (endSquare%10) - direction[1]/2)
+    gameState[Math.floor(endSquare/10) - direction[0]/2][(endSquare%10) - direction[1]/2] = 0
+    // add the piece to the captured tally and score
 }
