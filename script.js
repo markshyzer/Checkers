@@ -8,16 +8,33 @@ let helpIcon = document.getElementById('helpicon')
 let menubox = document.getElementById('menubox')
 
 // Application variables
-let gameState = [[0,0,0,0,0,0,0,0],[-1,0,0,0,0,0,0,0],[0,1,0,1,0,1,0,1],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[-1,0,-1,0,-1,0,-1,0],[0,0,0,0,0,0,0,0],[-1,0,-1,0,-1,0,-1,0]]
+let gameState = [
+    [0,1,0,1,0,1,0,1],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [1,0,1,0,1,0,1,0],
+    [0,-1,0,-1,0,-1,0,-1],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [-1,0,-1,0,-1,0,-1,0]]
 let pieceSelected = {x:0, y:0, value:0}
 let coordString 
 let gameStateX
 let gameStateY
 // let legalMoves = []
 let playerTurn = -1
-let legalLocal = [['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','','']]
+let legalLocal = [
+    ['','','','','','','',''],
+    ['','','','','','','',''],
+    ['','','','','','','',''],
+    ['','','','','','','',''],
+    ['','','','','','','',''],
+    ['','','','','','','',''],
+    ['','','','','','','',''],
+    ['','','','','','','','']]
 let squareID;
-
+let player1 = {score: 0, capturedEnemies: 0}
+let player0 = {score: 0, capturedEnemies: 0}
 
 helpIcon.addEventListener('click', function() {
     if (menubox.style.display === "") {
@@ -63,6 +80,10 @@ board.addEventListener('click', function(square) {
         console.log("Piece selected value after dropping: ", pieceSelected.value)
         } else if (legalLocal[gameStateX][gameStateY] === 'jump') {
             console.log("Jump!")
+            console.log("Delta: ", delta(squareID, (pieceSelected.x*10) + pieceSelected.y))
+
+            console.log("SquareID: ", squareID, typeof(parseInt(squareID)))
+            capture( (pieceSelected.x*10) + pieceSelected.y,  parseInt(squareID))
             dropPiece(squareID)
         } else {
             console.log("Illegal move!")
@@ -99,11 +120,11 @@ function setPieceSelected(square) {
         playerTurn *= -1
         dropPiece(square.target.parentElement.id)
     } else {
-    console.log("Set Square: ", square.target.parentElement.id[0])
-    pieceSelected.x = parseInt(square.target.parentElement.id[0])
-    pieceSelected.y = parseInt(square.target.parentElement.id[1])
-    pieceSelected.value = gameState[pieceSelected.x][pieceSelected.y]
-    console.log ("pieceSelected: ", pieceSelected)
+        console.log("Set Square: ", square.target.parentElement.id[0])
+        pieceSelected.x = parseInt(square.target.parentElement.id[0])
+        pieceSelected.y = parseInt(square.target.parentElement.id[1])
+        pieceSelected.value = gameState[pieceSelected.x][pieceSelected.y]
+        console.log ("pieceSelected: ", pieceSelected)
     if (pieceSelected.value*playerTurn > 0) {
         square.target.parentElement.classList.add('selected')
         checkLegal(pieceSelected.x, pieceSelected.y)
@@ -157,48 +178,62 @@ function delta(start, end) {
 function checkLegal (squareX, squareY) {
     // clearLegal()
     // console.log("square X: ", squareX, "square Y: ", squareY)
+    console.log("Player turn", playerTurn, "Playerturn *-2", playerTurn*-2)
+    // Forward moves
     if (squareX+playerTurn < 8 && squareX+playerTurn >= 0) { // X boundary
         if (squareY+1 < 8) {// right Y boundary
-
+            console.log(squareX, playerTurn, squareY)
             if (gameState[squareX+playerTurn][squareY+1] === 0) {
-
                 legalLocal[squareX+playerTurn][squareY+1] = 'legal'
             }
-            if ((squareX+playerTurn*2 >=0 && squareX+playerTurn*2 <8 ) && gameState[squareX+playerTurn][squareY+1] === playerTurn*-1 && gameState[squareX+(playerTurn*2)][squareY+2] === 0) {
-                legalLocal[squareX+(playerTurn*2)][squareY+2] = 'jump'
+
+            if (squareX+playerTurn*2 >= 0 && squareX+playerTurn*2 <8) {
+                if (((gameState[squareX+playerTurn][squareY+1] === playerTurn*-1) || (gameState[squareX+playerTurn][squareY+1] === playerTurn*-2)) && gameState[squareX+(playerTurn*2)][squareY+2] === 0) {
+                    legalLocal[squareX+(playerTurn*2)][squareY+2] = 'jump'
+                }
             }
         }
         if (squareY-1 >= 0) { // left Y boundary
             if (gameState[squareX+playerTurn][squareY-1] === 0) {
                 legalLocal[squareX+playerTurn][squareY-1] = 'legal'
             }
-            
-            if ((squareX+playerTurn*2 >=0 && squareX+playerTurn*2 <8 ) && gameState[squareX+playerTurn][squareY-1] === playerTurn*-1 && gameState[squareX+(playerTurn*2)][squareY-2] === 0) {
-                legalLocal[squareX+(playerTurn*2)][squareY-2] = 'jump'
+            if (squareX+playerTurn*2 >= 0 && squareX+playerTurn*2 <8 ) {
+                if (((gameState[squareX+playerTurn][squareY-1] === playerTurn*-1) || (gameState[squareX+playerTurn][squareY-1] === playerTurn*-2)) && gameState[squareX+(playerTurn*2)][squareY-2] === 0) {
+                    legalLocal[squareX+(playerTurn*2)][squareY-2] = 'jump'
+                }
             }
         }
     }
+    // Reverse Moves
     if (pieceSelected.value === 2 || pieceSelected.value === -2) {
         console.log("You've chosen a king")
+        console.log(legalLocal)
         if (squareX-playerTurn < 8 && squareX-playerTurn >= 0) { // X boundary
             if (squareY+1 < 8) {// right Y boundary
 
                 if (gameState[squareX-playerTurn][squareY+1] === 0) {
                     legalLocal[squareX-playerTurn][squareY+1] = 'legal'
                 }
-                if ((squareX-(playerTurn) >=0 && squareX-(playerTurn) <8 ) && gameState[squareX-playerTurn][squareY+1] === playerTurn*-1 && gameState[squareX-(playerTurn*2)][squareY+2] === 0) {
-                    legalLocal[squareX+(playerTurn*2)][squareY+2] = 'jump'
+                if (squareX+(playerTurn*-2) >=0 && squareX+(playerTurn*-2) <8 ) {
+                if (((gameState[squareX-playerTurn][squareY+1] === playerTurn*-1) || (gameState[squareX-playerTurn][squareY+1] === playerTurn*-2)) && (gameState[squareX-(playerTurn*2)][squareY+2] === 0)) {
+                    legalLocal[squareX-(playerTurn*2)][squareY+2] = 'jump'
+                    console.log("Legal jump available to the right at ", squareX-(playerTurn*2), ",", squareY+2)
+
                 }
+            }
             } //
             if (squareY-1 >= 0) { // left Y boundary
                 if (gameState[squareX-playerTurn][squareY-1] === 0) {
                     legalLocal[squareX-playerTurn][squareY-1] = 'legal'
                 }
                 
-                if ((squareX-(playerTurn) >=0 && squareX-(playerTurn) <8 ) && gameState[squareX-playerTurn][squareY-1] === playerTurn*-1 && gameState[squareX-(playerTurn*2)][squareY-2] === 0) {
+                if (squareX+(playerTurn*-2) >=0 && squareX+(playerTurn*-2) <8 ) {
+                if (((gameState[squareX-playerTurn][squareY-1] === playerTurn*-1) || (gameState[squareX-playerTurn][squareY-1] === playerTurn*-2)) && (gameState[squareX-(playerTurn*2)][squareY-2] === 0)) {
                     legalLocal[squareX-(playerTurn*2)][squareY-2] = 'jump'
+                    console.log("Legal jump available to the left at ", squareX-(playerTurn*2), ",", squareY-2)
                 }
             }
+        }
         }
     }
     // if the value of the square at x:player and y:+/-1 = 0, it's legal
@@ -223,4 +258,12 @@ function renderLegal (squareX, squareY) {
             }
         })
     })
+}
+
+function capture (startSquare, endSquare) {
+    console.log ("Start and end: ", startSquare, endSquare, "Types: ", typeof(startSquare), typeof(endSquare))
+    let direction = delta(startSquare, endSquare)
+    console.log("Direction of move: ", direction)
+    // gameState[(Math.floor[endSquare/10])+direction[0]/2][(endSquare%10)+direction/2] = 0
+
 }
