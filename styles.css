@@ -1,6 +1,6 @@
 :root {
-    --black: #666666;
-    --white: #DDDDDD;
+    --black: #333333;
+    --white: darkred;
     --boardsize: 600px;
     --squaresize: 75px;
     --player1color: white;
@@ -12,7 +12,9 @@
 }
 
 body {
-    background-color: silver;
+    background-color: beige;
+    background-image: url("img/woodgrain.jpg");
+    background-size: cover;
     display: flex;
     font-family: Arial, Helvetica, sans-serif;
 }
@@ -34,6 +36,7 @@ body {
 }
 
 #helpicon {
+    display: none;
     background-color: darkgray;
     box-sizing: content-box;
     width: 30px;
@@ -76,6 +79,7 @@ body {
     width: var(--squaresize);
     /* background-color: var(--white); */
     /* border: thin solid white; */
+    border: 1px solid gold;
 }
 
 
@@ -181,7 +185,7 @@ img {
     display: none;
     justify-content: center;
     align-items: center;
-    background-color: pink;
+    background-color: gold;
     position: relative;
     height: 100px;
     top: -435px;
