@@ -6,29 +6,31 @@
 let board = document.getElementById('board')
 let helpIcon = document.getElementById('helpicon')
 let menubox = document.getElementById('menubox')
-let player1Status = document.getElementById('P1status')
-let player2Status = document.getElementById('P2status')
+let status = document.getElementById('status')
+let player1status = document.getElementById('P1status')
+let player0status = document.getElementById('P0status')
+
 
 
 // Application variables
 let gameState = [
-    // [0,0,0,0,0,0,0,0],
-    // [-1,0,0,0,0,0,0,0],
-    // [0,0,0,1,0,0,0,0],
-    // [0,0,0,0,0,1,0,0],
-    // [0,1,0,1,0,0,0,1],
-    // [-1,0,0,0,-1,0,-1,0],
-    // [0,1,0,-1,0,-1,0,-1],
-    // [-2,0,-1,0,-1,0,-1,0]]
+    [0,0,0,0,0,0,0,0],
+    [-1,0,0,0,0,0,0,0],
+    [0,0,0,1,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,1,0,1,0,0,0,1],
+    [-1,0,0,0,-1,0,-1,0],
+    [0,1,0,-1,0,-1,0,-1],
+    [-2,0,-1,0,-1,0,-1,0]]
 
-    [0,1,0,1,0,1,0,1],
-    [1,0,1,0,1,0,1,0],
-    [0,1,0,1,0,1,0,1],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [-1,0,-1,0,-1,0,-1,0],
-    [0,-1,0,-1,0,-1,0,-1],
-    [-1,0,-1,0,-1,0,-1,0]]
+    // [0,1,0,1,0,1,0,1],
+    // [1,0,1,0,1,0,1,0],
+    // [0,1,0,1,0,1,0,1],
+    // [0,0,0,0,0,0,0,0],
+    // [0,0,0,0,0,0,0,0],
+    // [-1,0,-1,0,-1,0,-1,0],
+    // [0,-1,0,-1,0,-1,0,-1],
+    // [-1,0,-1,0,-1,0,-1,0]]
 let pieceSelected = {x:0, y:0, value:0}
 let gameStateX
 let gameStateY
@@ -49,6 +51,7 @@ let secondJump = false
 let destinationX;
 let destionationY;
 let moveCount = 0;
+
 
 
 helpIcon.addEventListener('click', function() {
@@ -121,20 +124,24 @@ function render() {
             if (y == 1 || y == -1) {
                 document.getElementById(xi.toString() + yi.toString()).innerHTML = `<div class="piece" style="background-color:var(--player${y}color)"></div>`
             } else if (y == 2 || y == -2) {
-                document.getElementById(xi.toString() + yi.toString()).innerHTML = `<div class="piece" class="king" style="background-color:var(--player${y*.5}color)">K</div>`
+                document.getElementById(xi.toString() + yi.toString()).innerHTML = `<div class="piece king" style="background-color:var(--player${y*.5}color)"></div>`
             } else {
                 document.getElementById(xi.toString() + yi.toString()).innerHTML = ``
             }
         })
     })
-    console.log("About to render the player turn! It's ", playerTurn)
-    if (playerTurn === 1) {
-        player1Status.innerHTML = 'Your Turn'
-        player2Status.innerHTML = ''
-    } else if (playerTurn === -1) {
-        player2Status.innerHTML = 'Your Turn'
-        player1Status.innerHTML = ''
+    
+    if (player1.capturedEnemies > 0) {
+        player1status.innerHTML = `<div class="piece" style="background-color:var(--player-1color)">${player1.capturedEnemies}</div>`
+    } 
+    if (player0.capturedEnemies > 0) {
+        player0status.innerHTML = `<div class="piece" style="background-color:var(--player1color)">${player0.capturedEnemies}</div>`
+
     }
+
+    board.style.border = `10px solid var(--player${playerTurn}color)`
+    status.innerHTML = `Player 1 captured enemies: ${player1.capturedEnemies} <br> Player 0 captured enemies: ${player0.capturedEnemies} <br> P1score: ${player1.score} P0score: ${player0.score} <br>moves since capture: ${moveCount}`
+
 }
 
 function setPieceSelected(square) {
@@ -171,9 +178,8 @@ function dropPiece(destinationSquare, moveType, square) {
     gameState[pieceSelected.x][pieceSelected.y] = 0
     clearSelected()
     render()
-    console.log("Just dropped the piece!")
+    moveCount++
     playerTurn *= -1
-    console.log("The player turn is now ", playerTurn)
 }
 
 function delta(start, end) {
@@ -217,19 +223,19 @@ function checkLegal (squareX, squareY) {
                     legalLocal[squareX-playerTurn][squareY+1] = 'legal'
                 }
                 if (squareX+(playerTurn*-2) >=0 && squareX+(playerTurn*-2) <8 ) {
-                if (((gameState[squareX-playerTurn][squareY+1] === playerTurn*-1) || (gameState[squareX-playerTurn][squareY+1] === playerTurn*-2)) && (gameState[squareX-(playerTurn*2)][squareY+2] === 0)) {
-                    legalLocal[squareX-(playerTurn*2)][squareY+2] = 'jump'
+                    if (((gameState[squareX-playerTurn][squareY+1] === playerTurn*-1) || (gameState[squareX-playerTurn][squareY+1] === playerTurn*-2)) && (gameState[squareX-(playerTurn*2)][squareY+2] === 0)) {
+                        legalLocal[squareX-(playerTurn*2)][squareY+2] = 'jump'
+                    }
                 }
-            }
-            } //
+            } 
             if (squareY-1 >= 0) { // checking moves to the left
                 if (gameState[squareX-playerTurn][squareY-1] === 0) {
                     legalLocal[squareX-playerTurn][squareY-1] = 'legal'
                 }
                 if (squareX+(playerTurn*-2) >=0 && squareX+(playerTurn*-2) <8 ) {
-                if (((gameState[squareX-playerTurn][squareY-1] === playerTurn*-1) || (gameState[squareX-playerTurn][squareY-1] === playerTurn*-2)) && (gameState[squareX-(playerTurn*2)][squareY-2] === 0)) {
-                    legalLocal[squareX-(playerTurn*2)][squareY-2] = 'jump'
-                }
+                    if (((gameState[squareX-playerTurn][squareY-1] === playerTurn*-1) || (gameState[squareX-playerTurn][squareY-1] === playerTurn*-2)) && (gameState[squareX-(playerTurn*2)][squareY-2] === 0)) {
+                        legalLocal[squareX-(playerTurn*2)][squareY-2] = 'jump'
+                    }
             }
         }
         }
@@ -256,8 +262,20 @@ function renderLegal () {
 
 function capture (startSquare, endSquare) {
     let direction = delta(startSquare, endSquare)
+    moveCount = -1
+    if (playerTurn === -1) {
+        player0.score += gameState[Math.floor(endSquare/10) - direction[0]/2][(endSquare%10) - direction[1]/2]
+        player0.capturedEnemies++
+    } else if (playerTurn === 1) {
+        player1.score += (gameState[Math.floor(endSquare/10) - direction[0]/2][(endSquare%10) - direction[1]/2])*-1
+        player1.capturedEnemies++
+    }
+    console.log(player0, player1)
+
     gameState[Math.floor(endSquare/10) - direction[0]/2][(endSquare%10) - direction[1]/2] = 0
     // add the piece to the captured tally and score
+
+    
 
 }
 

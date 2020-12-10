@@ -14,6 +14,7 @@
 body {
     background-color: silver;
     display: flex;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 #menu {
@@ -58,12 +59,14 @@ body {
 }
 
 #board {
+    box-sizing: content-box; 
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    background-color: beige;
+    background-color: var(--white);
     width: var(--boardsize);
     min-width: var(--boardsize);
+    border: 10px solid var(--player-1color);
 
 
 }
@@ -71,7 +74,7 @@ body {
 .square {
     height: var(--squaresize);
     width: var(--squaresize);
-    background-color: var(--white);
+    /* background-color: var(--white); */
     /* border: thin solid white; */
 }
 
@@ -109,33 +112,34 @@ body {
 }
 
 #P1status {
-    width: 200px;
-    height: 75px;
-    background-color: darkgray;
+    width: var(--squaresize);
+    height: var(--squaresize);
+    /* background-color: darkgray; */
     position: relative;
-    left: 610px;
-    top: -600px;
+    left: 630px;
+    top: -610px;
 
 }
 
-#P2status {
-    margin: 10px;
-    width: 200px;
-    height: 75px;
-    background-color: darkgray;
+#P0status {
+    /* margin: 10px; */
+    width: var(--squaresize);
+    height: var(--squaresize);
+    /* background-color: darkgray; */
     position: relative;
-    right: 220px;
-    top: -160px;
+    right: 85px;
+    top: -230px;
 }
 
 .piece {
-    width: 80%;
-    height: 80%;
+    width: 75%;
+    height: 75%;
     background-color: white;
     position: relative;
     top: 10%;
     left: 10%;
     border-radius: 50%;
+
     box-shadow: 2px 2px 2px rgba(5, 5, 5, 0.5);
     color: silver;
     font-size: 200%;
@@ -143,9 +147,9 @@ body {
     text-align: center;
 }
 
-.selected {
-    /* border: thin solid pink; */
-}
+/* .selected {
+    border: thin solid pink;
+} */
 
 .selected .piece {
     box-shadow: 10px 10px 5px rgba(5, 5, 5, 0.5);
@@ -154,9 +158,6 @@ body {
 
 .legal {
     box-shadow: inset 0px 0px 10px 10px #444444;
-    /* border: thin solid var(--black) */
-    /* border: thick solid green; */
-    /* background-color: green; */
 }
 
 /* .legal:hover {
@@ -174,5 +175,4 @@ img {
 .king {
     background-image: url("img/checkers_crown.png");
     background-size: contain;
-    border: thick solid green;
 }
