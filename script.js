@@ -14,23 +14,15 @@ let player0status = document.getElementById('P0status')
 
 // Application variables
 let gameState = [
-    [0,1,0,0,0,0,0,0],
-    [0,0,-1,0,0,0,-1,0],
+    [0,0,0,1,0,0,0,0],
+    [0,0,0,0,0,0,-1,0],
     [0,0,0,0,0,0,0,0],
-    [0,0,0,0,-1,0,0,0],
+    [0,0,0,0,1,0,0,0],
     [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
+    [0,0,1,0,0,0,0,0],
+    [0,-1,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0]]
 
-    // [0,1,0,1,0,1,0,1],
-    // [1,0,1,0,1,0,1,0],
-    // [0,1,0,1,0,1,0,1],
-    // [0,0,0,0,0,0,0,0],
-    // [0,0,0,0,0,0,0,0],
-    // [-1,0,-1,0,-1,0,-1,0],
-    // [0,-1,0,-1,0,-1,0,-1],
-    // [-1,0,-1,0,-1,0,-1,0]]
 let pieceSelected = {x:0, y:0, value:0}
 let gameStateX
 let gameStateY
@@ -45,8 +37,8 @@ let legalLocal = [
     ['','','','','','','',''],
     ['','','','','','','','']]
 let squareID;
-let player1 = {score: 0, capturedEnemies: 0}
-let player0 = {score: 0, capturedEnemies: 0}
+let player1 = {score: 0, capturedEnemies: 9}
+let player0 = {score: 0, capturedEnemies: 9}
 let secondJump = false
 let destinationX;
 let destionationY;
@@ -55,7 +47,6 @@ let winner = 0
 let draw = false;
 
 render()
-init()
 
 helpIcon.addEventListener('click', function() {
     if (menubox.style.display === "") {

@@ -156,12 +156,12 @@ body {
 } */
 
 .selected .piece {
-    box-shadow: 10px 10px 5px rgba(5, 5, 5, 0.5);
+    box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.5);
     top: -5%;
 }
 
 .legal {
-    box-shadow: inset 0px 0px 10px 10px #444444;
+    box-shadow: inset 0px 0px 5px 5px #999999;
 }
 
 /* .legal:hover {
