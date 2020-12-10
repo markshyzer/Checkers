@@ -15,9 +15,9 @@ let player0status = document.getElementById('P0status')
 // Application variables
 let gameState = [
     [0,1,0,0,0,0,0,0],
+    [0,0,-1,0,0,0,-1,0],
     [0,0,0,0,0,0,0,0],
-    [0,0,0,-1,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,-1,0,0,0],
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
@@ -54,6 +54,8 @@ let moveCount = 0;
 let winner = 0
 let draw = false;
 
+render()
+init()
 
 helpIcon.addEventListener('click', function() {
     if (menubox.style.display === "") {
@@ -63,8 +65,8 @@ helpIcon.addEventListener('click', function() {
     }
 })
 
-console.log("Player turn at start: ", playerTurn)
-render()
+
+
 
 board.addEventListener('click', function(square) {
 // set the ID of the chosen square as a single number and as separate X and Y
@@ -115,7 +117,7 @@ board.addEventListener('click', function(square) {
         } else {
             console.log("Illegal move!")
         }
-    }
+    } 
 })
 
 function render() {
@@ -213,7 +215,7 @@ function dropPiece(destinationSquare, moveType, square) {
     }
     gameState[pieceSelected.x][pieceSelected.y] = 0
     clearSelected()
-    render()
+    // render()
     moveCount++
     playerTurn *= -1
 }
@@ -333,11 +335,10 @@ function checkWinner(){
         console.log("player 1 WINS!")
         winner = 1
     }
-    // winner = checkAllLegal()
-    if (checkAllLegal() === 0) {
-        console.log("Player ", playerTurn*-1, "wins by lack of moves")
-        winner = playerTurn*-1
-    }
+    // if (checkAllLegal() === 0) {
+    //     console.log("Player ", playerTurn*-1, "wins by lack of moves")
+    //     winner = playerTurn*-1
+    // }
 
     if (moveCount > drawAt) {
         console.log("Draw!")
@@ -353,7 +354,6 @@ function checkAllLegal() {
     gameState.forEach(function (x, xi) {
         x.forEach(function (y, yi) {
             if (y === playerTurn || y == playerTurn*2) {
-                pieceSelected.value = y
                 checkLegal(xi, yi)
                 console.log("Checking moves on space ", xi, yi)
                 if ( legalLocal.some(space => space.includes('jump')) || legalLocal.some(space => space.includes('legal')) ) {
@@ -363,7 +363,7 @@ function checkAllLegal() {
             } 
         })
     })
-    clearSelected()
+    clearLegal()
     return moves
 }
 
