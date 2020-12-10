@@ -24,7 +24,7 @@
 
 
 # Next Steps: 
-- Fix win conditions
+- Fix win conditions & CSS styling
 - Force jumps when available
 - Audio
 - Animation
