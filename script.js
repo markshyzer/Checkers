@@ -46,7 +46,7 @@ let moveCount = 0;
 let winner = 0
 let draw = false;
 
-render()
+init()
 
 helpIcon.addEventListener('click', function() {
     if (menubox.style.display === "") {
@@ -101,8 +101,6 @@ board.addEventListener('click', function(square) {
                 jumpsOnly() 
                 renderLegal()
                 setPieceSelected(squareID)
-
-                // secondJump = true 
                 render()
             } 
         } else {
@@ -112,7 +110,6 @@ board.addEventListener('click', function(square) {
 })
 
 function render() {
-    console.log("Starting render! Player turn is ", playerTurn)
     gameState.forEach(function(x, xi){
         x.forEach(function (y, yi){
             if (y == 1 || y == -1) {
@@ -128,7 +125,6 @@ function render() {
     checkWinner()
     if (winner) {
         status.style.display = 'flex';
-        console.log("Player ", winner, "wins!")
         status.innerHTML = `<div class="winnerbox"><div class="piece" style="background-color:var(--player${winner}color)"></div>
         </div>
         WINNER
@@ -136,7 +132,6 @@ function render() {
             <div class="piece" style="background-color:var(--player${winner}color)"></div>
         </div>`
         status.addEventListener('click', function(event){
-            // event.target.removeEventListener()
             init()
             console.log("restart")
             status.style.display = "none"
@@ -152,7 +147,6 @@ function render() {
             <div class="piece" style="background-color:var(--player-1color)"></div>
         </div>`
         status.addEventListener('click', function(event){
-            // event.target.removeEventListener()
             init()
             console.log("restart")
             status.style.display = "none"
@@ -169,7 +163,6 @@ function render() {
     }
 
     board.style.border = `10px solid var(--player${playerTurn}color)`
-    // status.innerHTML = `Player 1 captured enemies: ${player1.capturedEnemies} <br> Player 0 captured enemies: ${player0.capturedEnemies} <br> P1score: ${player1.score} P0score: ${player0.score} <br>moves since capture: ${moveCount}`
 
 }
 
@@ -206,7 +199,6 @@ function dropPiece(destinationSquare, moveType, square) {
     }
     gameState[pieceSelected.x][pieceSelected.y] = 0
     clearSelected()
-    // render()
     moveCount++
     playerTurn *= -1
 }
@@ -218,8 +210,6 @@ function delta(start, end) {
 function checkLegal (squareX, squareY) {
     clearLegal()
     // Forward moves
-    // console.log("Game state at begining of checkLegal: ", gameState)
-    // console.log("Turn at begining of checkLegal: ", playerTurn)
     if (squareX+playerTurn < 8 && squareX+playerTurn >= 0) { // X boundary
         if (squareY+1 < 8) {// checking moves to the right
             if (gameState[squareX+playerTurn][squareY+1] === 0) {
@@ -277,7 +267,6 @@ function clearLegal () {
 }
 
 function renderLegal () {
-    // console.log(legalLocal)
     legalLocal.forEach(function(x, xi) {
         x.forEach(function (y, yi) {
             if (y !== '') {
@@ -299,13 +288,8 @@ function capture (startSquare, endSquare) {
         player1.score += (gameState[Math.floor(endSquare/10) - direction[0]/2][(endSquare%10) - direction[1]/2])*-1
         player1.capturedEnemies++
     }
-    console.log(player0, player1)
-
     gameState[Math.floor(endSquare/10) - direction[0]/2][(endSquare%10) - direction[1]/2] = 0
     // add the piece to the captured tally and score
-
-    
-
 }
 
 function jumpsOnly() {
