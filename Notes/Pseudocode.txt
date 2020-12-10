@@ -55,8 +55,19 @@ When a player clicks restart: reinitiatlize the game
 
 	
 
-
-
+-Try using the .cursor css property to turn the cursor into a checkers piece when a space is selected (while making a move)
+-Note menu div is interfering with game clicks
 
 	-
 
+Piece styling: <div class="piece" style="background-color:var(--player1color)">
+
+
+TODO: 
+
+
+Render turn, pieces captured
+Add checkWin function
+
+background-image: url("img/checkers_crown.png");
+    background-size: contain;
