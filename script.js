@@ -1,5 +1,5 @@
 // Required Constants
- const drawAt = 20 /*call a draw if this many turns pass without capture*/
+ const drawAt = 40 /*call a draw if this many turns pass without capture*/
 
 
 // Cache le DOM 
@@ -14,14 +14,14 @@ let player0status = document.getElementById('P0status')
 
 // Application variables
 let gameState = [
+    [0,1,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
-    [-1,0,0,0,0,0,0,0],
-    [0,0,0,1,0,0,0,0],
+    [0,0,0,-1,0,0,0,0],
     [0,0,0,0,0,0,0,0],
-    [0,1,0,1,0,0,0,1],
-    [-1,0,0,0,-1,0,-1,0],
-    [0,1,0,-1,0,-1,0,-1],
-    [-2,0,-1,0,-1,0,-1,0]]
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0]]
 
     // [0,1,0,1,0,1,0,1],
     // [1,0,1,0,1,0,1,0],
@@ -51,7 +51,8 @@ let secondJump = false
 let destinationX;
 let destionationY;
 let moveCount = 0;
-
+let winner = 0
+let draw = false;
 
 
 helpIcon.addEventListener('click', function() {
@@ -130,7 +131,42 @@ function render() {
             }
         })
     })
-    
+    // WINNER
+    checkWinner()
+    if (winner) {
+        status.style.display = 'flex';
+        console.log("Player ", winner, "wins!")
+        status.innerHTML = `<div class="winnerbox"><div class="piece" style="background-color:var(--player${winner}color)"></div>
+        </div>
+        WINNER
+        <div class="winnerbox">
+            <div class="piece" style="background-color:var(--player${winner}color)"></div>
+        </div>`
+        status.addEventListener('click', function(event){
+            // event.target.removeEventListener()
+            init()
+            console.log("restart")
+            status.style.display = "none"
+        })
+    }
+
+    if (draw) {
+        status.style.display = 'flex';
+        status.innerHTML = `<div class="winnerbox"><div class="piece" style="background-color:var(--player1color)"></div>
+        </div>
+        DRAW
+        <div class="winnerbox">
+            <div class="piece" style="background-color:var(--player-1color)"></div>
+        </div>`
+        status.addEventListener('click', function(event){
+            // event.target.removeEventListener()
+            init()
+            console.log("restart")
+            status.style.display = "none"
+
+        })
+    }
+
     if (player1.capturedEnemies > 0) {
         player1status.innerHTML = `<div class="piece" style="background-color:var(--player-1color)">${player1.capturedEnemies}</div>`
     } 
@@ -140,7 +176,7 @@ function render() {
     }
 
     board.style.border = `10px solid var(--player${playerTurn}color)`
-    status.innerHTML = `Player 1 captured enemies: ${player1.capturedEnemies} <br> Player 0 captured enemies: ${player0.capturedEnemies} <br> P1score: ${player1.score} P0score: ${player0.score} <br>moves since capture: ${moveCount}`
+    // status.innerHTML = `Player 1 captured enemies: ${player1.capturedEnemies} <br> Player 0 captured enemies: ${player0.capturedEnemies} <br> P1score: ${player1.score} P0score: ${player0.score} <br>moves since capture: ${moveCount}`
 
 }
 
@@ -289,3 +325,70 @@ function jumpsOnly() {
     })
 }
 
+function checkWinner(){
+    if (player0.capturedEnemies === 12) {
+        console.log ("player 0 WINS")
+        winner = -1
+    } else if (player1.capturedEnemies === 12) {
+        console.log("player 1 WINS!")
+        winner = 1
+    }
+    // winner = checkAllLegal()
+    if (checkAllLegal() === 0) {
+        console.log("Player ", playerTurn*-1, "wins by lack of moves")
+        winner = playerTurn*-1
+    }
+
+    if (moveCount > drawAt) {
+        console.log("Draw!")
+        draw = true
+
+    }
+
+}
+
+function checkAllLegal() {
+    let moves = 0
+    console.log("Checking moves for player ", playerTurn)
+    gameState.forEach(function (x, xi) {
+        x.forEach(function (y, yi) {
+            if (y === playerTurn || y == playerTurn*2) {
+                pieceSelected.value = y
+                checkLegal(xi, yi)
+                console.log("Checking moves on space ", xi, yi)
+                if ( legalLocal.some(space => space.includes('jump')) || legalLocal.some(space => space.includes('legal')) ) {
+                    console.log(playerTurn, "has moves available")
+                    moves++ 
+                }
+            } 
+        })
+    })
+    clearSelected()
+    return moves
+}
+
+function init() {
+    gameState = [
+    [0,1,0,1,0,1,0,1],
+    [1,0,1,0,1,0,1,0],
+    [0,1,0,1,0,1,0,1],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [-1,0,-1,0,-1,0,-1,0],
+    [0,-1,0,-1,0,-1,0,-1],
+    [-1,0,-1,0,-1,0,-1,0]]
+
+    clearSelected()
+    clearLegal()
+    playerTurn = -1
+    player1 = {score: 0, capturedEnemies: 0}
+    player0 = {score: 0, capturedEnemies: 0}
+    moveCount = 0;
+    winner = 0
+    draw = false;
+    render()
+
+    player1status.innerHTML = ``
+    player0status.innerHTML = ``
+    
+}

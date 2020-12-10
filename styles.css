@@ -176,3 +176,30 @@ img {
     background-image: url("img/checkers_crown.png");
     background-size: contain;
 }
+
+#status {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background-color: pink;
+    position: relative;
+    height: 100px;
+    top: -435px;
+    font-size: 90px;
+    /* line-height: 100px; */
+    text-align: center;
+    /* padding: 30px; */
+}
+
+span {
+    font-size: 20px;
+}
+
+.winnerbox {
+    width: var(--squaresize);
+    height: var(--squaresize);
+    position: relative;
+
+
+
+}
