@@ -14,6 +14,9 @@
 ![](https://github.com/markshyzer/Checkers/blob/master/img/Screen%20Shot%202020-12-10%20at%201.24.06%20PM.png)
 ![](https://github.com/markshyzer/Checkers/blob/master/img/Screen%20Shot%202020-12-10%20at%201.23.11%20PM.png)
 
+# How to Play:
+Black moves first. Legal moves and jumps will be highlighted when you select a piece. Select it again to cancel, or select a highlighted square to move to it. Chained jumps must be taken if available. The game board border colour will change at the end of each turn to indicate the current player.
+
 #  Technologies Used: 
 - JavaScript 
 - HTML 
