@@ -20,7 +20,7 @@
 - CSS
 
 # Getting Started:
-[Play the game](https://markshyzer.github.io/Checkers/) Black always moves first.
+[Play the game!](https://markshyzer.github.io/Checkers/) Black always moves first.
 
 
 # Next Steps: 
